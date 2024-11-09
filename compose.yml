@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:latest
+    restart: unless-stopped
+    ports:
+      - ${POINT_DA_BICHARADA_DATABASE_PORT:-5432}:5432
+    environment:
+      POSTGRES_USER: ${POINT_DA_BICHARADA_DATABASE_USER}
+      POSTGRES_PASSWORD: ${POINT_DA_BICHARADA_DATABASE_PASSWORD}
+      POSTGRES_DB: ${POINT_DA_BICHARADA_DATABASE_NAME}
+    volumes:
+      - db:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@admin.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-password}
+    ports:
+      - 8081:80
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+
+volumes:
+  db:
+    driver: local
+  pgadmin:
+    driver: local

@@ -1,0 +1,15 @@
+version: "2"
+sql:
+  - engine: "postgresql"
+    queries: "./pgstore/queries"
+    schema: "./pgstore/migrations"
+    gen:
+      go:
+        out: "./pgstore"
+        package: "pgstore"
+        sql_package: "pgx/v5"
+        overrides:
+          - column: "clientes.cpf"
+            go_type:
+              import: "github.com/phenpessoa/br"
+              type: "CPF"
