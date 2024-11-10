@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"os"
 
 	"github.com/alunos-estacio-2023-01/trabalho-react-native-point-da-bicharada-backend/internal/api"
@@ -13,7 +14,13 @@ import (
 )
 
 func main() {
-	s := fuego.NewServer(fuego.WithAddr(":9999"))
+	s := fuego.NewServer(
+		fuego.WithAddr(":9999"),
+		fuego.WithLogHandler(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
+			AddSource: true,
+			Level:     slog.LevelDebug,
+		})),
+	)
 
 	if err := godotenv.Load(); err != nil {
 		panic(err)

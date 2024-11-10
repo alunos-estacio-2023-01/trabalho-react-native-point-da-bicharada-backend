@@ -49,7 +49,7 @@ deleted_rows AS (
     DELETE FROM clientes_telefones
     WHERE EXISTS (SELECT id FROM id)
         AND cliente_id = (SELECT id FROM id LIMIT 1)
-    AND telefone <> ALL(ARRAY[sqlc.arg(telefone)]::text[])
+        AND telefone NOT IN (SELECT unnest(sqlc.arg(telefones)::text[]))
     RETURNING 1
 ),
 inserted_rows AS (

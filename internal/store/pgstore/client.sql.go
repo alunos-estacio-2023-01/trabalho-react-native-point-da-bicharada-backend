@@ -242,12 +242,12 @@ deleted_rows AS (
     DELETE FROM clientes_telefones
     WHERE EXISTS (SELECT id FROM id)
         AND cliente_id = (SELECT id FROM id LIMIT 1)
-    AND telefone <> ALL(ARRAY[$2]::text[])
+        AND telefone NOT IN (SELECT unnest($2::text[]))
     RETURNING 1
 ),
 inserted_rows AS (
     INSERT INTO clientes_telefones (cliente_id, telefone)
-    SELECT id, unnest($3::text[])
+    SELECT id, unnest($2::text[])
     FROM id
     WHERE EXISTS (SELECT 1 FROM id)
     ON CONFLICT (cliente_id, telefone) DO NOTHING
@@ -257,12 +257,11 @@ SELECT EXISTS (SELECT 1 FROM id) AS success
 
 type UpdateClientePhonesParams struct {
 	Cpf       br.CPF
-	Telefone  []string
 	Telefones []string
 }
 
 func (q *Queries) UpdateClientePhones(ctx context.Context, arg UpdateClientePhonesParams) (bool, error) {
-	row := q.db.QueryRow(ctx, updateClientePhones, arg.Cpf, arg.Telefone, arg.Telefones)
+	row := q.db.QueryRow(ctx, updateClientePhones, arg.Cpf, arg.Telefones)
 	var success bool
 	err := row.Scan(&success)
 	return success, err
