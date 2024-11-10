@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	s := fuego.NewServer()
+	s := fuego.NewServer(fuego.WithAddr(":9999"))
 
 	if err := godotenv.Load(); err != nil {
 		panic(err)

@@ -7,7 +7,6 @@ package pgstore
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/phenpessoa/br"
